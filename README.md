@@ -61,6 +61,17 @@ this.el = ReactHelper.render(
 ); // this will render an empty div
 ```
 
+**mockComponentWithClassName(Component, ClassName)**
+
+Any subequent rendering of the provided component will render a `div` with the provided className instead of executing its real `render` function.
+
+```js
+ReactHelper.mockComponent(DummyComponent, "example");
+this.el = ReactHelper.render(
+  <DummyComponent />
+); // this will render <div class="example" />
+```
+
 **setup()**
 
 This function should be called before any other ReactHelper methods are. In this scaffold, it is done globally in `spec/helpers/spec_helper.js`.
