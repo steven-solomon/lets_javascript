@@ -48,38 +48,40 @@ describe('ReactHelper', function() {
   });
 
   describe('-mockComponentWithClassName', function() {
-    describe('a mocked component (before an unmocked test)', function() {
-      beforeEach(function() {
-        ReactHelper.mockComponentWithClassName(DummyComponent, mockComponentWithClassName);
-        this.el = ReactHelper.render(
-          <DummyComponent />
-        );
+    describe('preventing test pollution when rendering', function() {
+      describe('a mocked component (before an unmocked test)', function() {
+        beforeEach(function() {
+          ReactHelper.mockComponentWithClassName(DummyComponent, mockComponentWithClassName);
+          this.el = ReactHelper.render(
+            <DummyComponent />
+          );
+        });
+
+        it('is rendered into the DOM without any children', function() {
+          expect(this.el.textContent).toEqual('');
+        });
+
+       it('is rendered into the DOM with a className', function() {
+          expect(this.el.getElementsByClassName(mockComponentWithClassName).length).toEqual(1);
+          expect(this.el.getElementsByClassName(initialClassName).length).toEqual(0);
+        });
       });
 
-      it('is rendered into the DOM without any children', function() {
-        expect(this.el.textContent).toEqual('');
-      });
+      describe('an unmocked component (after a mocked test)', function() {
+        beforeEach(function() {
+          this.el = ReactHelper.render(
+            <DummyComponent />
+          );
+        });
 
-     it('is rendered into the DOM with a className', function() {
-        expect(this.el.getElementsByClassName(mockComponentWithClassName).length).toEqual(1);
-        expect(this.el.getElementsByClassName(initialClassName).length).toEqual(0);
-      });
-    });
+        it('is rendered into the DOM normally', function() {
+          expect(this.el.textContent).toEqual('I have some contents');
+        });
 
-    describe('an unmocked component (after a mocked test)', function() {
-      beforeEach(function() {
-        this.el = ReactHelper.render(
-          <DummyComponent />
-        );
-      });
-
-      it('is rendered into the DOM normally', function() {
-        expect(this.el.textContent).toEqual('I have some contents');
-      });
-
-      it('is rendered into the DOM with initial-class-name', function() {
-        expect(this.el.getElementsByClassName(mockComponentWithClassName).length).toEqual(0);
-        expect(this.el.getElementsByClassName(initialClassName).length).toEqual(1);
+        it('is rendered into the DOM with initial-class-name', function() {
+          expect(this.el.getElementsByClassName(mockComponentWithClassName).length).toEqual(0);
+          expect(this.el.getElementsByClassName(initialClassName).length).toEqual(1);
+        });
       });
     });
   });
