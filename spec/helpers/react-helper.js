@@ -27,14 +27,29 @@ class ReactHelper {
     return this._el;
   }
 
-  mockComponent(component) {
+  _addMockForComponent(component) {
     this._mockedComponents[component.name] = {
       component: component,
       renderFn: component.prototype.render
     };
+  }
+
+  mockComponent(component) {
+    this._addMockForComponent(component);  
 
     component.prototype.render = function mockRender() {
       return (<div/>);
+    };
+  }
+
+  mockComponentWithClassName(component, className) {
+    this._addMockForComponent(component);
+    
+    component.state = { className: className };
+
+    component.prototype.render = function mockRender() {
+      this.state = {className: className}
+      return (<div className={this.state.className}/>);
     };
   }
 }
